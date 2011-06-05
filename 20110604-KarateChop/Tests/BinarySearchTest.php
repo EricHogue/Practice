@@ -78,4 +78,57 @@ class BinarySearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame(1, $pos);
 	}
 	
+	public function testElementFoundWhenBiggerThanMiddle() {
+		$pos = $this->searcher->search(4, array(1, 2, 3, 4, 5));
+		$this->assertSame(3, $pos);
+	}
+	
+	public function testFindFirstElement() {
+		$pos = $this->searcher->search(1, array(1, 2, 3, 4, 5));
+		$this->assertSame(0, $pos);
+	}
+	
+	public function testFindLastElement() {
+		$pos = $this->searcher->search(5, array(1, 2, 3, 4, 5));
+		$this->assertSame(4, $pos);
+	}
+	
+	public function testNOtFoundWhenBeforeFirst() {
+		$pos = $this->searcher->search(0, array(1, 2, 3, 4, 5));
+		$this->assertSame(-1, $pos);
+	}
+	
+	public function testNOtFoundWhenAfterLast() {
+		$pos = $this->searcher->search(6, array(1, 2, 3, 4, 5));
+		$this->assertSame(-1, $pos);
+	}
+	
+	public function testNOtFoundWhenMissing() {
+		$pos = $this->searcher->search(3, array(1, 2, 4, 5));
+		$this->assertSame(-1, $pos);
+	}
+	
+	public function testKataData() {
+		$this->assertSame(-1, $this->searcher->search(3, array()));
+		$this->assertSame(-1, $this->searcher->search(3, array(1)));
+		$this->assertSame(0,  $this->searcher->search(1, array(1)));
+		
+		$this->assertSame(0,  $this->searcher->search(1, array(1, 3, 5)));
+		$this->assertSame(1,  $this->searcher->search(3, array(1, 3, 5)));
+		$this->assertSame(2,  $this->searcher->search(5, array(1, 3, 5)));
+		$this->assertSame(-1, $this->searcher->search(0, array(1, 3, 5)));
+		$this->assertSame(-1, $this->searcher->search(2, array(1, 3, 5)));
+		$this->assertSame(-1, $this->searcher->search(4, array(1, 3, 5)));
+		$this->assertSame(-1, $this->searcher->search(6, array(1, 3, 5)));
+		
+		$this->assertSame(0,  $this->searcher->search(1, array(1, 3, 5, 7)));
+		$this->assertSame(1,  $this->searcher->search(3, array(1, 3, 5, 7)));
+		$this->assertSame(2,  $this->searcher->search(5, array(1, 3, 5, 7)));
+		$this->assertSame(3,  $this->searcher->search(7, array(1, 3, 5, 7)));
+		$this->assertSame(-1, $this->searcher->search(0, array(1, 3, 5, 7)));
+		$this->assertSame(-1, $this->searcher->search(2, array(1, 3, 5, 7)));
+		$this->assertSame(-1, $this->searcher->search(4, array(1, 3, 5, 7)));
+		$this->assertSame(-1, $this->searcher->search(6, array(1, 3, 5, 7)));
+		$this->assertSame(-1, $this->searcher->search(8, array(1, 3, 5, 7)));
+	}
 }
