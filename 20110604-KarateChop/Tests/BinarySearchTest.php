@@ -3,6 +3,12 @@ require_once 'BinarySearch.php';
 
 class BinarySearchTest extends PHPUnit_Framework_TestCase {
 	/**
+	 * @var array
+	 */
+	private $dataToSeach = array(1, 2, 3, 4, 5);
+	
+	
+	/**
 	 * @var BinarySearch
 	 */
 	private $searcher;
@@ -74,32 +80,32 @@ class BinarySearchTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testElementFoundWhenSmallerThanMiddle() {
-		$pos = $this->searcher->search(2, array(1, 2, 3, 4, 5));
+		$pos = $this->searcher->search(2, $this->dataToSeach);
 		$this->assertSame(1, $pos);
 	}
 	
 	public function testElementFoundWhenBiggerThanMiddle() {
-		$pos = $this->searcher->search(4, array(1, 2, 3, 4, 5));
+		$pos = $this->searcher->search(4, $this->dataToSeach);
 		$this->assertSame(3, $pos);
 	}
 	
 	public function testFindFirstElement() {
-		$pos = $this->searcher->search(1, array(1, 2, 3, 4, 5));
+		$pos = $this->searcher->search(1, $this->dataToSeach);
 		$this->assertSame(0, $pos);
 	}
 	
 	public function testFindLastElement() {
-		$pos = $this->searcher->search(5, array(1, 2, 3, 4, 5));
+		$pos = $this->searcher->search(5, $this->dataToSeach);
 		$this->assertSame(4, $pos);
 	}
 	
 	public function testNOtFoundWhenBeforeFirst() {
-		$pos = $this->searcher->search(0, array(1, 2, 3, 4, 5));
+		$pos = $this->searcher->search(0, $this->dataToSeach);
 		$this->assertSame(-1, $pos);
 	}
 	
 	public function testNOtFoundWhenAfterLast() {
-		$pos = $this->searcher->search(6, array(1, 2, 3, 4, 5));
+		$pos = $this->searcher->search(6, $this->dataToSeach);
 		$this->assertSame(-1, $pos);
 	}
 	
