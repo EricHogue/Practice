@@ -1,0 +1,6 @@
+Implementing FizzBuzz
+
+Count From one to 100, 
+Multiples of 3 should echo Fizz
+Multiples of 5 should echo Buzz
+Multiples of 3 and 5 should echo FizzBuzz
