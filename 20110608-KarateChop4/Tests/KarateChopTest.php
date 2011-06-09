@@ -1,5 +1,4 @@
 <?php
-
 class KarateChopTest extends PHPUnit_Framework_TestCase
 {
 	/**
@@ -10,7 +9,7 @@ class KarateChopTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @var array
 	 */
-	private $haystack = array(1, 5, 7, 8, 10, 32, 478);
+	private $haystack = array(2, 4, 6, 8, 10, 12, 14);
 
 
 	public function setup()
@@ -22,39 +21,28 @@ class KarateChopTest extends PHPUnit_Framework_TestCase
 		$this->assertSame(-1, $this->chopper->chop(1, array()));
 	}
 
-	public function testReturnNegative1ForUnexistingNeedle() {
-		$this->assertSame(-1, $this->chopper->chop(2, $this->haystack));
+	public function testReturnNegative1ForNotFoundValue() {
+		$this->assertSame(-1, $this->chopper->chop(1, $this->haystack));
 	}
 
-	public function testFindNeedleWhenItsTheOnlyElement() {
-		$this->assertSame(0, $this->chopper->chop(1, array(1)));
-	}
-
-	public function testFindElementWhenInCenter() {
+	public function testFindElementInMiddleOfArray() {
 		$this->assertSame(3, $this->chopper->chop(8, $this->haystack));
 	}
-
-	public function testFindElementWhenBeforeMiddle() {
-		$this->assertSame(1, $this->chopper->chop(5, $this->haystack));
+	
+	public function testFindElementBeforeMiddleOfArray() {
+		$this->assertSame(2, $this->chopper->chop(6, $this->haystack));
 	}
-
-	public function testFindElementWhenAfterMiddle() {
-		$this->assertSame(6, $this->chopper->chop(478, $this->haystack));
+	
+	public function testFindElementAfterMiddleOfArray() {
+		$this->assertSame(5, $this->chopper->chop(12, $this->haystack));
 	}
-
-	public function testDontFindBeforeArray() {
-		$this->assertSame(-1, $this->chopper->chop(0, $this->haystack));
+	
+	public function testDontFindElementBeforeFirstValue() {
+		$this->assertSame(-1, $this->chopper->chop(1, $this->haystack));
 	}
-
-	public function testDontFindAfterArray() {
-		$this->assertSame(-1, $this->chopper->chop(479, $this->haystack));
-	}
-
-	public function testFindInArrayWithEvenNumberOfElements() {
-		$haystack = $this->haystack;
-		$haystack[] = 500;
-
-		$this->assertSame(4, $this->chopper->chop(10, $haystack));
+	
+	public function testDontFindElementAfterLastValue() {
+		$this->assertSame(-1, $this->chopper->chop(44564, $this->haystack));
 	}
 	
 	public function testKataTests() {
@@ -80,5 +68,5 @@ class KarateChopTest extends PHPUnit_Framework_TestCase
 		$this->assertSame(-1, $this->chopper->chop(6, array(1, 3, 5, 7)));
 		$this->assertSame(-1, $this->chopper->chop(8, array(1, 3, 5, 7)));
 	}
-
+	
 }

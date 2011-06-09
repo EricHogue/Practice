@@ -40,8 +40,6 @@ class KarateChop
 		if ($needle === $middleValue) return $middle;
 		if ($needle < $middleValue) return $this->searchSubArray($needle, $haystack, 0, $middle - 1);
 		else if ($needle > $middleValue) return $this->searchSubArray($needle, $haystack, $middle + 1, $endIndex);
-
-		return -1;
 	}
 
 }
