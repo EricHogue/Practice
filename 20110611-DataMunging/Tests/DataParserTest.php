@@ -5,61 +5,62 @@ class DataParserTest extends PHPUnit_Framework_TestCase {
 	 * @var DataParser
 	 */
 	private $parser;
-	
-	
+
+
 	public function setup() {
 		$this->parser = new DataParser();
 	}
-	
-	public function testLoadingAnEmptyFileReturnAnArray() {
-		$this->assertInternalType('array', $this->parser->parse(''));
-	}
-	
+
 	public function testEmptyDataReturnEmptyArray() {
-		$this->assertEmpty($this->parser->parse(''));
+		$this->assertEquals(0, $this->parser->parse('')->getCount());
 	}
-	
+
 	public function testOneDayOfDataReturnsArrayOfOneElement() {
-		$this->assertSame(1, count($this->parser->parse($this->getDataFromFile('weather1Line.dat'))));	
+		$this->assertSame(1, count($this->parser->parse($this->getDataFromFile('weather1Line.dat'))));
 	}
-	
+
 	public function testLineNotStartingByDayIsNotData() {
 		$this->assertFalse($this->parser->isDataLine('(Unofficial, Preliminary Data). Source: <a'));
 	}
-	
+
 	public function testLineThatStartWithNumberIsDataLine() {
 		$this->assertTrue($this->parser->isDataLine(self::DATA_LINE));
 	}
-	
+
 	public function testLineWithoutEnoughColumnsIsNotDataLine() {
 		$this->assertFalse($this->parser->isDataLine('1 34 34'));
 	}
-	
+
 	public function testTotalLineIsNotADataLine() {
 		$this->assertFalse($this->parser->isDataLine('  mo  82.9  60.5  71.7    16  58.8       0.00              6.9          5.3'));
 	}
-	
+
 	public function testParsingALineReadTheDay() {
 		$this->assertSame(1, $this->parser->parseLine(self::DATA_LINE)->getDay());
 	}
-	
+
 	public function testParsingALineReadTheMaximum() {
 		$this->assertSame(88, $this->parser->parseLine(self::DATA_LINE)->getMaximum());
 	}
-	
+
 	public function testParsingALineReadTheMinimum() {
 		$this->assertSame(59, $this->parser->parseLine(self::DATA_LINE)->getMinimum());
 	}
-	
+
 	public function testParsingTheFileReturns30Rows() {
-		$this->assertSame(30, count($this->parser->parse($this->getDataFromFile('weather.dat'))));
+		$this->assertSame(30, $this->parser->parse($this->getDataFromFile('weather.dat'))->getCount());
 	}
-	
+
 	public function test14thDaySpreadIs2() {
 		$parsedData = $this->parser->parse($this->getDataFromFile('weather.dat'));
-		$this->assertSame(2, $parsedData[14]->getTemperatureSpread());
+		$this->assertSame(2, $parsedData->getDay(14)->getTemperatureSpread());
 	}
-	
+
+	public function testGetSmallestSpread() {
+		$parsedData = $this->parser->parse($this->getDataFromFile('weather.dat'));
+		$this->assertSame(14, $parsedData->getSmallestSpreadDay()->getDay());
+	}
+
 	/*
 	 * Get the data from a file
 	 *

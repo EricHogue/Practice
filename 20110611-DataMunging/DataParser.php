@@ -4,29 +4,29 @@
  */
 class DataParser {
 	const MINIMUM_COLUMN_COUNT = 15;
-	
+
 	public function __construct() {
 	}
-	
+
 	/*
 	 * Parse a data file
 	 *
-	 * @return void
+	 * @return MonthWeather
 	 */
 	public function parse($data) {
-		$parsedData = array();		
+		$parsedData = array();
 		$splitedData = explode("\n", $data);
-		
+
 		foreach ($splitedData as $line) {
 			if ($this->isDataLine($line)) {
 				$day = $this->parseLine($line);
 				$parsedData[$day->getDay()] = $day;
 			}
 		}
-		
-		return $parsedData;
+
+		return new MonthWeather($parsedData);
 	}
-	
+
 	/*
 	 * Check if a line contains parsable data
 	 *
@@ -34,12 +34,12 @@ class DataParser {
 	 */
 	public function isDataLine($line) {
 		$data = preg_split('/\s/', trim($line));
-		
+
 		if (count($data) >= self::MINIMUM_COLUMN_COUNT && is_numeric($data[0])) return true;
-		
+
 		return false;
 	}
-	
+
 	/*
 	 * Parse one line of the data
 	 *
@@ -47,7 +47,7 @@ class DataParser {
 	 */
 	public function parseLine($line) {
 		$data = preg_split('/\s+/', trim($line));
-		
+
 		return new DayWeather($data[0], $data[2], $data[1]);
 	}
 }
