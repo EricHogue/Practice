@@ -36,5 +36,14 @@ class DataCollection
 		$this->items[] = $item;
 	}
 
+	/**
+	 * Sort the items
+	 *
+	 * @return void
+	 */
+	public function sort() {
+		$this->items[0]->compare($this->items[1]);
+	}
+
 
 }

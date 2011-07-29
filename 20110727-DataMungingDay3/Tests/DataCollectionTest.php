@@ -22,8 +22,32 @@ class DataCollectionTest extends PHPUnit_Framework_TestCase
 	}
 
 	public function testCountIsOneAfterAddingAnElement() {
-		$this->collection->add(1);
+		$item = $this->getMock('DataItem');
+		$this->collection->add($item);
 		$this->assertSame(1, $this->collection->count());
+	}
+
+	public function testSortCallCompareOnElements() {
+		$item1 = $this->getMock('DataItem', array('compare', 'getSpread'));
+		$item1->expects($this->once())
+			->method('compare')
+			->will($this->returnValue(1));
+		$this->collection->add($item1);
+
+		$item2 = $this->getMock('DataItem');
+		$this->collection->add($item2);
+
+		$this->collection->sort();
+	}
+
+	public function testCanGetFirstItemByIndex() {
+		$item1 = $this->getMock('DataItem', array('compare', 'getSpread'));
+		$item1->expects($this->once())
+			->method('compare')
+			->will($this->returnValue(1));
+		$this->collection->add($item1);
+
+		$this->assertSame($item1, $this->collection[0]);
 	}
 
 

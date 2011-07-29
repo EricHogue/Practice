@@ -6,4 +6,6 @@
 interface DataItem
 {
 	function getSpread();
+
+	function compare(DataItem $item2);
 }
