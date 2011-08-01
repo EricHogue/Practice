@@ -3,7 +3,7 @@
 /**
  * Collection of data object
  */
-class DataCollection
+class DataCollection implements ArrayAccess
 {
 	/**
 	 * @var array
@@ -42,8 +42,35 @@ class DataCollection
 	 * @return void
 	 */
 	public function sort() {
-		$this->items[0]->compare($this->items[1]);
+		usort($this->items, array($this, 'compareItemsOnSpread'));
 	}
 
+	public function offsetExists($offset) {
+		return array_key_exists($offset, $this->items);
+	}
 
+	public function offsetGet($offset) {
+		return array_key_exists($offset, $this->items)? $this->items[$offset]: null;
+	}
+
+	public function offsetSet($offset, $value) {
+		if (is_null($offset)) {
+			$this->items[] = $value;
+		} else {
+			$this->items[$offset] = $value;
+		}
+	}
+
+	public function offsetUnset($offset) {
+		unset($this->items[$offset]);
+	}
+
+	/**
+	 * Compare 2 elements by spread
+	 *
+	 * @return void
+	 */
+	private function compareItemsOnSpread(DataItem $item1, DataItem $item2) {
+		return $item1->compare($item2);
+	}
 }
