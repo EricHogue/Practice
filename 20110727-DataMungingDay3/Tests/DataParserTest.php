@@ -2,9 +2,14 @@
 
 class DataParserTest extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * @var DataParser
+	 */
+	private $parser;
 
 	public function setup()
 	{
+		$this->parser = new DataParser();
 	}
 
 	public function testCreateParser() {
@@ -12,8 +17,7 @@ class DataParserTest extends PHPUnit_Framework_TestCase
 	}
 
 	public function testParseEmptyStringReturnsEmptyCollection() {
-		$parser = new DataParser();
-		$collection = $parser->parse('', '');
+		$collection = $this->parser->parse('DataParser', '');
 
 		$this->assertSame(0, $collection->count());
 	}
@@ -21,9 +25,8 @@ class DataParserTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException Exception
 	 */
-	public function testParseWithInexistingClassThrowAnException() {
-		$parser = new DataParser();
-		$collection = $parser->parse('DataItem', '');
+	public function testParseWithInexistingClassThrowsAnException() {
+		$collection = $this->parser->parse('InvalidClass', '');
 	}
 
 }

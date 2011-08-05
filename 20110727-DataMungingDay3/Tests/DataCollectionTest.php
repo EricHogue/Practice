@@ -28,7 +28,7 @@ class DataCollectionTest extends PHPUnit_Framework_TestCase
 	}
 
 	public function testSortCallCompareOnElements() {
-		$item1 = $this->getMock('DataItem', array('compare', 'getSpread'));
+		$item1 = $this->getMock('DataItem');
 		$this->collection->add($item1);
 
 		$item2 = $this->getMock('DataItem');

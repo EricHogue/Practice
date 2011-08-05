@@ -3,9 +3,36 @@
 /**
  * Base class for data items
  */
-interface DataItem
+abstract class DataItem
 {
-	function getSpread();
+	/**
+	 * @var int
+	 */
+	protected $id = -1;
 
-	function compare(DataItem $item2);
+	abstract function getSpread();
+
+	abstract function parse($dataLine);
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	public function __construct($id = -1) {
+		$this->id = $id;
+	}
+
+	/**
+	 * Return the id
+	 *
+	 * @return void
+	 */
+	public function getID() {
+		return $this->id;
+	}
+
+	function compare(DataItem $item2) {
+		return $this->getSpread() - $item2->getSpread();
+	}
 }
