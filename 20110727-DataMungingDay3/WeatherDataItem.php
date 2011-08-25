@@ -4,6 +4,8 @@
  */
 class WeatherDataItem extends DataItem
 {
+	const MINIMUM_COLUMN_COUNT = 15;
+
 	/**
 	 * @var int
 	 */
@@ -45,7 +47,31 @@ class WeatherDataItem extends DataItem
 	 * @return void
 	 */
 	public function parse($dataLine) {
-		throw new Exception('Not Implemented yet');
+		if ($this->isDataLineValid($dataLine)) {
+			$data = preg_split('/\s+/', trim($dataLine));
+
+			$this->day = $data[0];
+			$this->minimum = $data[2];
+			$this->maximum = $data[1];
+
+			return true;
+		} else {
+			throw new Exception('Invalid data line');
+		}
+	}
+
+
+	/**
+	 * Check if the data is valid
+	 *
+	 * @return boolean
+	 */
+	private function isDataLineValid($dataLine) {
+		$data = preg_split('/\s/', trim($dataLine));
+
+		if (count($data) >= self::MINIMUM_COLUMN_COUNT && is_numeric($data[0])) return true;
+
+		return false;
 	}
 
 }

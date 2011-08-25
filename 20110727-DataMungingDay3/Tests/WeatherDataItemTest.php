@@ -38,4 +38,9 @@ class WeatherDataItemTest extends PHPUnit_Framework_TestCase
 	public function testParseValidDataReturnsTrue() {
 		$this->assertTrue($this->item->parse(self::DATA));
 	}
+
+	public function testParseValidDataReadsCorrectSpread() {
+		$this->item->parse(self::DATA);
+		$this->assertSame(29, $this->item->getSpread());
+	}
 }
