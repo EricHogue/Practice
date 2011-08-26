@@ -55,9 +55,9 @@ class WeatherDataItem extends DataItem
 			$this->maximum = $data[1];
 
 			return true;
-		} else {
-			throw new Exception('Invalid data line');
 		}
+
+		return false;
 	}
 
 

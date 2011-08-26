@@ -28,11 +28,8 @@ class WeatherDataItemTest extends PHPUnit_Framework_TestCase
 		$this->assertSame(21, $item->getSpread());
 	}
 
-	/**
-	 * @expectedException Exception
-	 */
 	public function testParseInvalidDataThrowAnException() {
-		$this->item->parse('fjdlksj fd;asdfj');
+		$this->assertFalse($this->item->parse('fjdlksj fd;asdfj'));
 	}
 
 	public function testParseValidDataReturnsTrue() {
