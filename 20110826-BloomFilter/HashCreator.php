@@ -21,13 +21,29 @@ class HashCreator
 	public function getFunctions($functionCount, $numberOfBits) {
 		$functions = array();
 		$algo = self::HASH_ALGO;
+		$neededChars = $this->neededCharsForXBits($numberOfBits);
 
-		for ($i = 0; $i < $functionCount; $i++) {
-			$functions[] = function ($toHash) use ($algo) {
-				return (int) hash($algo, $toHash);
+
+
+		for ($functionIndex = 0; $functionIndex < $functionCount; $functionIndex++) {
+			$functions[] = function ($toHash) use ($algo, $neededChars, $functionIndex) {
+				$hash = hash($algo, $toHash);
+				$partialHash = substr($hash, $neededChars * $functionIndex, $neededChars);
+				$value = base_convert($partialHash, 16, 10);
+
+				return $value;
 			};
 		}
 
 		return $functions;
+	}
+
+	/**
+	 * Check how many chars are needed for X bits
+	 *
+	 * @return void
+	 */
+	public function neededCharsForXBits($numbersOfBits) {
+		return (int) ceil($numbersOfBits / 16);
 	}
 }
