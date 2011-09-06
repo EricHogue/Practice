@@ -56,9 +56,6 @@ class HashCreatorTest extends PHPUnit_Framework_TestCase
 		$this->assertNotSame($fistValue, $secondValue);
 	}
 
-	//Multiple hashes are equals
-
-
 	public function testNeededCharsFor10BitsIsOne() {
 		$this->assertSame(1, $this->creator->neededCharsForXBits(10));
 	}
@@ -71,12 +68,18 @@ class HashCreatorTest extends PHPUnit_Framework_TestCase
 		$this->assertSame(2, $this->creator->neededCharsForXBits(17));
 	}
 
-	public function testfunctionName() {
+	public function testHashValuesIsLessThanMax() {
 		$numberOfBits = 10;
 		$functions = $this->creator->getFunctions(3, $numberOfBits);
 
-		$this->assertLessThanOrEqual($numberOfBits, $functions[2]('123456789'));
-
-		error_log(hash('sha256', '123456789'));
+		$this->assertLessThan($numberOfBits, $functions[2]('123456789'));
+	}
+	
+	public function testHashFunctionAlwaysReturnTheSameValueForSameText() {
+		$functions = $this->creator->getFunctions(1, 100);
+		$value1 = $functions[0]('Test');
+		$value2 = $functions[0]('Test');
+		
+		$this->assertSame($value1, $value2);
 	}
 }

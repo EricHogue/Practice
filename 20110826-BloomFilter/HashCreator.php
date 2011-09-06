@@ -26,12 +26,12 @@ class HashCreator
 
 
 		for ($functionIndex = 0; $functionIndex < $functionCount; $functionIndex++) {
-			$functions[] = function ($toHash) use ($algo, $neededChars, $functionIndex) {
+			$functions[] = function ($toHash) use ($algo, $neededChars, $functionIndex, $numberOfBits) {
 				$hash = hash($algo, $toHash);
 				$partialHash = substr($hash, $neededChars * $functionIndex, $neededChars);
 				$value = base_convert($partialHash, 16, 10);
-
-				return $value;
+				
+				return ($value < $numberOfBits? $value: ($numberOfBits - 1));
 			};
 		}
 
