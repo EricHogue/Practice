@@ -24,7 +24,41 @@ class BloomFilterTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($this->bloomFilter->add('test'));
 	}
 
-	public function testInexistentWordNotFound() {
+	public function tesWordNotFoundInEmptyFilter() {
 		$this->assertFalse($this->bloomFilter->exists('ksadfkal'));
 	}
+
+	public function testFindWord() {
+		$word = 'Test';
+		$this->bloomFilter->add($word);
+		$this->assertTrue($this->bloomFilter->exists($word));
+	}
+
+	public function testFindWordInFilterWithMoreThanOneWord() {
+		$filter = $this->bloomFilter;
+
+		$filter->add('word1');
+		$filter->add('word2');
+		$filter->add('word3');
+		$filter->add('word4');
+
+		$this->assertTrue($filter->exists('word3'));
+	}
+
+	public function testDontFindWordInFilterWithManyWord() {
+		$filter = $this->bloomFilter;
+
+		$filter->add('word1');
+		$filter->add('word2');
+		$filter->add('word3');
+		$filter->add('word4');
+
+		$this->assertFalse($filter->exists('word'));
+	}
+
+	public function testFindWordNoMatterTheCase() {
+		$this->bloomFilter->add('ToSearch');
+		$this->assertTrue($this->bloomFilter->exists('toSearch'));
+	}
+
 }
