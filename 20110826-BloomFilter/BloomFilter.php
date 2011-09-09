@@ -65,6 +65,10 @@ class BloomFilter
 		return true;
 	}
 
+	public function __toString() {
+        return print_r($this->bitmap, true);
+    }
+
 
 	/*
 	 * Initialize the bitmap

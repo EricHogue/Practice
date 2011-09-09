@@ -74,12 +74,24 @@ class HashCreatorTest extends PHPUnit_Framework_TestCase
 
 		$this->assertLessThan($numberOfBits, $functions[2]('123456789'));
 	}
-	
+
 	public function testHashFunctionAlwaysReturnTheSameValueForSameText() {
 		$functions = $this->creator->getFunctions(1, 100);
 		$value1 = $functions[0]('Test');
 		$value2 = $functions[0]('Test');
-		
+
 		$this->assertSame($value1, $value2);
+	}
+
+	public function testRequires2CharsFor128Bits() {
+		$this->assertSame(2, $this->creator->neededCharsForXBits(128));
+	}
+
+	public function test128BitsHasIsSmallerThan128() {
+		$max = 128;
+		$functions = $this->creator->getFunctions(1, $max);
+		$this->assertLessThan($max, $functions[0]('Crayola'));
+
+		error_log($functions[0]('Crayola'));
 	}
 }

@@ -30,7 +30,7 @@ class HashCreator
 				$hash = hash($algo, $toHash);
 				$partialHash = substr($hash, $neededChars * $functionIndex, $neededChars);
 				$value = base_convert($partialHash, 16, 10);
-				
+
 				return ($value < $numberOfBits? $value: ($numberOfBits - 1));
 			};
 		}
@@ -44,6 +44,6 @@ class HashCreator
 	 * @return void
 	 */
 	public function neededCharsForXBits($numbersOfBits) {
-		return (int) ceil($numbersOfBits / 16);
+		return (int) ceil(log($numbersOfBits, 16));
 	}
 }
