@@ -31,7 +31,7 @@ class HashCreator
 				$partialHash = substr($hash, $neededChars * $functionIndex, $neededChars);
 				$value = base_convert($partialHash, 16, 10);
 
-				return ($value < $numberOfBits? $value: ($numberOfBits - 1));
+				return $value % $numberOfBits;
 			};
 		}
 

@@ -91,7 +91,5 @@ class HashCreatorTest extends PHPUnit_Framework_TestCase
 		$max = 128;
 		$functions = $this->creator->getFunctions(1, $max);
 		$this->assertLessThan($max, $functions[0]('Crayola'));
-
-		error_log($functions[0]('Crayola'));
 	}
 }
