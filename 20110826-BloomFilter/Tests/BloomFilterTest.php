@@ -61,4 +61,13 @@ class BloomFilterTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($this->bloomFilter->exists('toSearch'));
 	}
 
+	public function testCountOnEmptyFilterIs0() {
+		$this->assertSame(0, $this->bloomFilter->valueCount());
+	}
+
+	public function testCountIs1AfterAddingOneWord() {
+		$this->bloomFilter->add('kfljsd');
+		$this->assertSame(1, $this->bloomFilter->valueCount());
+	}
+
 }

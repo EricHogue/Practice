@@ -19,6 +19,13 @@ class BloomFilter
 	 */
 	private $bitmap;
 
+	/**
+	 * @var integer
+	 */
+	private $numberOfValues = 0;
+
+
+
 
 	/**
 	 * Class constructor
@@ -44,6 +51,7 @@ class BloomFilter
 			$this->bitmap[$value] = 1;
 		}
 
+		$this->numberOfValues++;
 		return true;
 	}
 
@@ -66,9 +74,23 @@ class BloomFilter
 	}
 
 	public function __toString() {
-        return print_r($this->bitmap, true);
+		$onCount = 0;
+
+		foreach ($this->bitmap as $isOn) {
+			if (1 === $isOn) $onCount++;
+		}
+
+        return "On bits: {$onCount}/" . count($this->bitmap);
     }
 
+    /**
+     * Number of values in the filter
+     *
+     * @return integer
+     */
+    public function valueCount() {
+    	return $this->numberOfValues;
+    }
 
 	/*
 	 * Initialize the bitmap
