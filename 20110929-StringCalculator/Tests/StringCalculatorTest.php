@@ -27,4 +27,28 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
 	public function testAdd2NumbersSeparateByACommaReturnsTheSumOfBoth() {
 		$this->assertSame(6, $this->calculator->add('2,4'));
 	}
+
+	public function testCanAdd3Numbers() {
+		$this->assertSame(16, $this->calculator->add('4,5,7'));
+	}
+
+	public function testCanAddMultipleNumbers() {
+		$numbers = array(1, 2, 3, 565, 643, 234, 342, 3, 0, 324);
+
+		$sum = array_reduce($numbers, function($initial, $number) {return $initial + $number;}, 0);
+
+		$this->assertSame($sum, $this->calculator->add(implode(',', $numbers)));
+	}
+
+	public function testAddOnlyASpaceIs0() {
+		$this->assertSame(0, $this->calculator->add(' '));
+	}
+
+	public function testSpacesInNumbersAreIgnored() {
+		$this->assertSame(9, $this->calculator->add('	 1	, 3	,  	 5 '));
+	}
+
+	public function testSeparateNumbersByLineFeed() {
+		$this->assertSame(3, $this->calculator->add("1\n2"));
+	}
 }

@@ -19,15 +19,42 @@ class StringCalculator
 	 * @return integer
 	 */
 	public function add($numbers) {
+		if (0 === strlen($numbers)) return 0;
+
+		$number1 = $this->getFirstNumber($numbers);
+		$rest = $this->getTailForNumbers($numbers);
+
+		return $number1 + $this->add($rest);
+	}
+
+	/**
+	 * Get the first number
+	 *
+	 * @return void
+	 */
+	private function getFirstNumber($numbers) {
 		$separatorPosition = strpos($numbers, self::NUMBER_SEPARATOR);
+
 		if (false === $separatorPosition) {
 			return (int) $numbers;
-		} else {
-			$number1 = substr($numbers, 0, $separatorPosition);
-			$number2 = substr($numbers, $separatorPosition + 1);
-
-			return $number1 + $number2;
 		}
+
+		return (int) substr($numbers, 0, $separatorPosition);
+	}
+
+	/**
+	 * Return the tail of the numbers
+	 *
+	 * @return void
+	 */
+	private function getTailForNumbers($numbers) {
+		$separatorPosition = strpos($numbers, self::NUMBER_SEPARATOR);
+
+		if (false === $separatorPosition) {
+			return '';
+		}
+
+		return substr($numbers, $separatorPosition + 1);
 	}
 
 }
