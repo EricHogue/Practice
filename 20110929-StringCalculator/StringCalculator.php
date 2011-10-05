@@ -7,6 +7,12 @@ class StringCalculator
 	const NUMBER_SEPARATOR = ',';
 
 	/**
+	 * @var string
+	 */
+	private $delimiter = "[\n,]";
+
+
+	/**
 	 * Class constructor
 	 */
 	public function __construct()
@@ -21,8 +27,10 @@ class StringCalculator
 	public function add($numbers) {
 		if (0 === strlen($numbers)) return 0;
 
-		$number1 = $this->getFirstNumber($numbers);
-		$rest = $this->getTailForNumbers($numbers);
+		$numbersWithoutDelimiter = $this->extractDelimiter($numbers);
+
+		$number1 = $this->getFirstNumber($numbersWithoutDelimiter);
+		$rest = $this->getTailForNumbers($numbersWithoutDelimiter);
 
 		return $number1 + $this->add($rest);
 	}
@@ -33,13 +41,7 @@ class StringCalculator
 	 * @return void
 	 */
 	private function getFirstNumber($numbers) {
-		$separatorPosition = strpos($numbers, self::NUMBER_SEPARATOR);
-
-		if (false === $separatorPosition) {
-			return (int) $numbers;
-		}
-
-		return (int) substr($numbers, 0, $separatorPosition);
+		return $this->splitString($numbers, 0);
 	}
 
 	/**
@@ -48,13 +50,38 @@ class StringCalculator
 	 * @return void
 	 */
 	private function getTailForNumbers($numbers) {
-		$separatorPosition = strpos($numbers, self::NUMBER_SEPARATOR);
+		return $this->splitString($numbers, 1);
+	}
 
-		if (false === $separatorPosition) {
-			return '';
+	/**
+	 * Split the string and return the wanted part
+	 *
+	 * @return void
+	 */
+	private function splitString($numbers, $partToReturn) {
+		$parts = preg_split("/{$this->delimiter}/", $numbers, 2, PREG_SPLIT_NO_EMPTY);
+
+		if (array_key_exists($partToReturn, $parts)) return $parts[$partToReturn];
+
+		return '';
+	}
+
+	/**
+	 * Extract the delimiter if there is one
+	 *
+	 * @return void
+	 */
+	private function extractDelimiter($numbers) {
+		if (0 === strpos($numbers, '//')) {
+			$returnPos = strpos($numbers, "\n");
+			$delimiter = substr($numbers, 2, $returnPos - 2);
+
+			$this->delimiter = $delimiter;
+
+			return substr($numbers, $returnPos + 1);
 		}
 
-		return substr($numbers, $separatorPosition + 1);
+		return $numbers;
 	}
 
 }

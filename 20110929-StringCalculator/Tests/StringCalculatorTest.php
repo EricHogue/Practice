@@ -51,4 +51,19 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
 	public function testSeparateNumbersByLineFeed() {
 		$this->assertSame(3, $this->calculator->add("1\n2"));
 	}
+
+	public function testSeparateNumbersByCommaAndLineFeed() {
+		$this->assertSame(10, $this->calculator->add("1  ,  2,   3    \n     4"));
+	}
+
+	public function testAllowPassingDelimiter() {
+		$this->assertSame(3, $this->calculator->add("//;\n1;2"));
+	}
+
+	/**
+	 * @expectedException Exception
+	 */
+	public function testNegativeNumbersThrowAnException() {
+		$this->calculator->add("-1,1");
+	}
 }
