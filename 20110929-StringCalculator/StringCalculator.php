@@ -11,6 +11,12 @@ class StringCalculator
 	 */
 	private $delimiter = "[\n,]";
 
+	/**
+	 * @var array
+	 */
+	private $negativeNumbers;
+
+
 
 	/**
 	 * Class constructor
@@ -25,6 +31,23 @@ class StringCalculator
 	 * @return integer
 	 */
 	public function add($numbers) {
+		$negativeNumbers = array();
+
+		$result = $this->performAdd($numbers);
+
+		if (count($this->negativeNumbers) > 0) {
+			throw new Exception('Negative number not allowed: ' . implode(', ', $this->negativeNumbers));
+		}
+
+		return $result;
+	}
+
+	/*
+	 * Perform the add
+	 *
+	 * @return void
+	 */
+	private function performAdd($numbers) {
 		if (0 === strlen($numbers)) return 0;
 
 		$numbersWithoutDelimiter = $this->extractDelimiter($numbers);
@@ -41,7 +64,11 @@ class StringCalculator
 	 * @return void
 	 */
 	private function getFirstNumber($numbers) {
-		return $this->splitString($numbers, 0);
+		$firstNumber = (int) $this->splitString($numbers, 0);
+
+		if ($firstNumber < 0) $this->negativeNumbers[] = $firstNumber;
+
+		return $firstNumber;
 	}
 
 	/**

@@ -66,4 +66,24 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
 	public function testNegativeNumbersThrowAnException() {
 		$this->calculator->add("-1,1");
 	}
+
+	public function testExceptionContainsNegativeValue() {
+		try {
+			$this->calculator->add('1, -3');
+		} catch (Exception $e) {
+			$message = $e->getMessage();
+		}
+
+		$this->assertTrue(strpos($message, '-3') !== false);
+	}
+
+	public function testExceptionContainsAllNegativeNumbers() {
+		try {
+			$this->calculator->add('1, -3,-2,9,-5,9');
+		} catch (Exception $e) {
+			$message = $e->getMessage();
+		}
+
+		$this->assertTrue(strpos($message, '-3, -2, -5') !== false);
+	}
 }
