@@ -86,4 +86,8 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
 
 		$this->assertTrue(strpos($message, '-3, -2, -5') !== false);
 	}
+
+	public function testNumberGreaterThan1000AreIgnore() {
+		$this->assertSame(2, $this->calculator->add('1001,2'));
+	}
 }

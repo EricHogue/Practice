@@ -68,6 +68,8 @@ class StringCalculator
 
 		if ($firstNumber < 0) $this->negativeNumbers[] = $firstNumber;
 
+		$firstNumber = $firstNumber > 1000? 0: $firstNumber;
+
 		return $firstNumber;
 	}
 
