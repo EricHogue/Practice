@@ -9,7 +9,7 @@ class StringCalculator
 	/**
 	 * @var string
 	 */
-	private $delimiter = "[\n,]";
+	private $delimiters = array(',', "\n");
 
 	/**
 	 * @var array
@@ -33,7 +33,9 @@ class StringCalculator
 	public function add($numbers) {
 		$negativeNumbers = array();
 
-		$result = $this->performAdd($numbers);
+		$numbersWithoutDelimiter = $this->extractDelimiter($numbers);
+
+		$result = $this->performAdd($numbersWithoutDelimiter);
 
 		if (count($this->negativeNumbers) > 0) {
 			throw new Exception('Negative number not allowed: ' . implode(', ', $this->negativeNumbers));
@@ -50,12 +52,10 @@ class StringCalculator
 	private function performAdd($numbers) {
 		if (0 === strlen($numbers)) return 0;
 
-		$numbersWithoutDelimiter = $this->extractDelimiter($numbers);
+		$number1 = $this->getFirstNumber($numbers);
+		$rest = $this->getTailForNumbers($numbers);
 
-		$number1 = $this->getFirstNumber($numbersWithoutDelimiter);
-		$rest = $this->getTailForNumbers($numbersWithoutDelimiter);
-
-		return $number1 + $this->add($rest);
+		return $number1 + $this->performAdd($rest);
 	}
 
 	/**
@@ -88,11 +88,21 @@ class StringCalculator
 	 * @return void
 	 */
 	private function splitString($numbers, $partToReturn) {
-		$parts = preg_split("/{$this->delimiter}/", $numbers, 2, PREG_SPLIT_NO_EMPTY);
+		$delimitersRegEx = $this->getDelimiterRegEx();
+		$parts = preg_split($delimitersRegEx, $numbers, 2, PREG_SPLIT_NO_EMPTY);
 
 		if (array_key_exists($partToReturn, $parts)) return $parts[$partToReturn];
 
 		return '';
+	}
+
+	/*
+	 * Return the delimiter regex
+	 *
+	 * @return void
+	 */
+	private function getDelimiterRegEx() {
+		return '/' . implode('|' , array_map(function ($element) {return '(' . $element . ')';}, $this->delimiters)) . '/';
 	}
 
 	/**
@@ -101,16 +111,53 @@ class StringCalculator
 	 * @return void
 	 */
 	private function extractDelimiter($numbers) {
-		if (0 === strpos($numbers, '//')) {
-			$returnPos = strpos($numbers, "\n");
-			$delimiter = substr($numbers, 2, $returnPos - 2);
+		$delimitersString = $this->extractDelimitersString($numbers);
 
-			$this->delimiter = $delimiter;
+		if (strlen($delimitersString) > 0) {
+			if ($this->stringHasMultipleDelimiters($delimitersString)) {
+				$this->splitDelimiters($delimitersString);
+			} else {
+				$this->delimiters = array($delimitersString);
+			}
 
-			return substr($numbers, $returnPos + 1);
+			return substr($numbers, strlen($delimitersString) + 2);
 		}
 
 		return $numbers;
+	}
+
+	/*
+	 * Return the delimiters string
+	 *
+	 * @return void
+	 */
+	private function extractDelimitersString($numbers) {
+		if (0 === strpos($numbers, '//')) {
+			$returnPos = strpos($numbers, "\n");
+			$delimiters = substr($numbers, 2, $returnPos - 2);
+
+			return $delimiters;
+		}
+
+		return '';
+	}
+
+	/*
+	 * Check if the delimiter is multiple delimiters
+	 *
+	 * @return void
+	 */
+	private function stringHasMultipleDelimiters($delimitersString) {
+		return false !== strpos($delimitersString, '[');
+	}
+
+	/*
+	 * Split the multiple delimiters
+	 *
+	 * @return void
+	 */
+	private function splitDelimiters($delimitersString) {
+		$this->delimiters = preg_split('/[\[\]]/', $delimitersString, -1, PREG_SPLIT_NO_EMPTY);
 	}
 
 }

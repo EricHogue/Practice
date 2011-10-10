@@ -90,4 +90,26 @@ class StringCalculatorTest extends PHPUnit_Framework_TestCase
 	public function testNumberGreaterThan1000AreIgnore() {
 		$this->assertSame(2, $this->calculator->add('1001,2'));
 	}
+
+	public function testAllowDelimiterOfAnyLength() {
+		$this->assertSame(6, $this->calculator->add("//[\*\*\*]\n1***2***3"));
+	}
+
+	public function testDontDetectUnknowSeparators() {
+		$this->assertNotSame(6, $this->calculator->add("//[\+-]\n1*k*2*k*3"));
+	}
+
+
+	public function testAllowDelimiterWithDifferentChars() {
+		$this->assertSame(6, $this->calculator->add("//[\*]\n1*k*2*k*3"));
+	}
+
+	public function testAllowMultipleDelimiters() {
+		$this->assertSame(6, $this->calculator->add("//[\*][%]\n1*2%3"));
+	}
+
+	public function testMultipleDelimitersOfAnyLength() {
+		$this->assertSame(21, $this->calculator->add("//[qwe][-][kfsjadflk][kj]\n1kj2kfsjadflk3qwe4-5kj6"));
+	}
+
 }
