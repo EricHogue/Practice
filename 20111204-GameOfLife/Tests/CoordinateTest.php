@@ -21,4 +21,20 @@ class CoordinateTest extends PHPUnit_Framework_TestCase {
 	public function testHashReturnConcatOfBothCoordinates() {
 		$this->assertSame(self::X . '-' . self::Y, $this->coord->hash());
 	}
+
+	public function testCellHas8Neighbours() {
+		$this->assertSame(8, count($this->coord->getNeighbours()));
+	}
+
+	public function testGetCorrectNeighbours() {
+		$neighbours = $this->coord->getNeighbours();
+		$this->assertTrue(in_array(new Coordinate(2, 4), $neighbours));
+		$this->assertTrue(in_array(new Coordinate(3, 4), $neighbours));
+		$this->assertTrue(in_array(new Coordinate(4, 4), $neighbours));
+		$this->assertTrue(in_array(new Coordinate(2, 5), $neighbours));
+		$this->assertTrue(in_array(new Coordinate(4, 5), $neighbours));
+		$this->assertTrue(in_array(new Coordinate(2, 6), $neighbours));
+		$this->assertTrue(in_array(new Coordinate(3, 6), $neighbours));
+		$this->assertTrue(in_array(new Coordinate(4, 6), $neighbours));
+	}
 }

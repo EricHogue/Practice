@@ -24,4 +24,15 @@ class Coordinate {
 		return $this->x . '-' . $this->y;
 	}
 
+	public function getNeighbours() {
+		$neighbours = array();
+		for ($x = $this->x - 1; $x <= $this->x + 1; $x++) {
+			for ($y = $this->y - 1; $y <= $this->y + 1; $y++) {
+				if ($x != $this->x || $y != $this->y) $neighbours[] = new Coordinate($x, $y);
+			}
+		}
+
+		return $neighbours;
+	}
+
 }
