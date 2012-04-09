@@ -1,7 +1,18 @@
 
-watch ('.*\.php') {|phpFile| run_php_unit(phpFile[0])}
+watch ('.*\.php$') {|phpFile| run_php_unit(phpFile)} 
+
+$lastRunSuccessful = false
 
 def run_php_unit(modified_file)
 	system('clear')
-	system("phpunit -c phpunit.xml")
+	if (system("phpunit -c phpunit.xml")) 
+		if (!$lastRunSuccessful)
+			system("notify-send 'Tests are back to green'")
+		end
+
+		$lastRunSuccessful = true
+	else
+		$lastRunSuccessful = false
+		system("notify-send 'Test failed'")
+	end
 end
