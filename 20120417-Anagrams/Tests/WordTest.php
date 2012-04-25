@@ -28,5 +28,9 @@ class WordTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->word->isAnagram(new Word('e-r-ic')));
 	}
 
+	public function testGetWordReturnTheOriginalWord() {
+		$this->assertSame('eric', $this->word->getWord());
+	}
+
 
 }

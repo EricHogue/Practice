@@ -27,4 +27,8 @@ class Word {
 	public function isAnagram(Word $otherWord){
 		return 0 === strcasecmp($this->getKey(), $otherWord->getKey());
 	}
+
+	public function getWord() {
+		return $this->theWord;
+	}
 }
