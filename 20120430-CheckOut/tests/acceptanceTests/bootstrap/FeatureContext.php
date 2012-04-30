@@ -33,14 +33,14 @@ class FeatureContext extends BehatContext
         // Initialize your context here
     }
 
+	private $order;
 
 	/**
 	 * @Given /^an empty order$/
 	 */
 	public function anEmptyOrder()
 	{
-
-		throw new PendingException();
+		$this->order = new Order();
 	}
 
 	/**
@@ -48,7 +48,15 @@ class FeatureContext extends BehatContext
 	 */
 	public function thePriceIs($argument1)
 	{
+		assertSame(0, $this->order->total());
+	}
 
+
+	/**
+	 * @When /^I add (\d+) item "([^"]*)"$/
+	 */
+	public function iAddItem($argument1, $argument2)
+	{
 		throw new PendingException();
 	}
 
