@@ -33,4 +33,23 @@ class FeatureContext extends BehatContext
         // Initialize your context here
     }
 
+
+	/**
+	 * @Given /^an empty order$/
+	 */
+	public function anEmptyOrder()
+	{
+
+		throw new PendingException();
+	}
+
+	/**
+	 * @Then /^the price is (\d+)$/
+	 */
+	public function thePriceIs($argument1)
+	{
+
+		throw new PendingException();
+	}
+
 }
