@@ -1,0 +1,5 @@
+Solving a Sudoku
+
+This started has a little test, part of the hiring process of a company. In the original version, I just check if the sudoku was valid. 
+
+Now, I will try to actually solve the sudoku through code.
