@@ -16,9 +16,13 @@ def run_php_unit()
 		end
 
 		$lastRunSuccessful = true
+		
+		true
 	else
 		$lastRunSuccessful = false
 		#system("notify-send 'Test failed'")
+
+		false
 	end
 end
 
@@ -33,9 +37,10 @@ end
 
 def run_all
 	clear_screen
-	run_php_unit
-	puts "\n\n"
-	run_behat
+	if run_php_unit
+		puts "\n\n"
+		run_behat
+	end
 end
 
 run_all
