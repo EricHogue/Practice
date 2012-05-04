@@ -95,10 +95,8 @@ class FeatureContext extends BehatContext {
 	 * @When /^I try to solve it$/
 	 */
 	public function iTryToSolveIt() {
-		$solver = new Solver();
-
 		try {
-			$this->solvedGrid = $solver->solve($this->grid);
+			$this->solvedGrid = $this->getSolver()->solve($this->grid);
 		} catch (Exception $e) {
 			$this->exception = $e;
 		}
@@ -115,14 +113,17 @@ class FeatureContext extends BehatContext {
 	 * @Given /^a grid with duplicate values$/
 	 */
 	public function aGridWithDuplicateValues() {
-		throw new PendingException();
+		$this->grid = new Grid();
+		$this->grid->addCell(new Coordinate(0, 0), 1);
+		$this->grid->addCell(new Coordinate(1, 0), 1);
 	}
 
 	/**
-	 * @Then /^it should return an error$/
+	 * @Then /^it should return a duplicate values error$/
 	 */
-	public function itShouldReturnAnError() {
-		throw new PendingException();
+	public function itShouldReturnADuplicateValuesError()
+	{
+		assertInstanceOf('DuplicateValuesException', $this->exception);
 	}
 
 	/**
@@ -137,5 +138,11 @@ class FeatureContext extends BehatContext {
 	 */
 	public function itShouldReturnAFullValidGrid() {
 		throw new PendingException();
+	}
+
+
+	private function getSolver() {
+		$criterion = new GridCriterion();
+		return  new Solver(new Validator($this->grid, new GridSplitter($this->grid, $criterion), $criterion));
 	}
 }

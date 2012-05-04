@@ -11,7 +11,7 @@ Feature: Solve a sudoku grid
 	Scenario: I load a grid with errors
 		Given a grid with duplicate values
 		When I try to solve it
-		Then it should return an error
+		Then it should return a duplicate values error
 
 	Scenario: I load a grid to solve
 		Given a grid with valid initial state
