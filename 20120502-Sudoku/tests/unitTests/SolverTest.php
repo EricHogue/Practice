@@ -35,6 +35,9 @@ class SolverTest extends PHPUnit_Framework_TestCase {
 		$this->solver->solve($this->grid);
 	}
 
+
+
+
 	public function getCellsCount() {
 		return $this->countToReturn;
 	}

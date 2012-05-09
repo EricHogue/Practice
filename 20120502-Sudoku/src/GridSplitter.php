@@ -42,6 +42,22 @@ class GridSplitter {
 		return $subGrids;
 	}
 
+	public function nextEmptyCell() {
+		$linesCount = $this->criterion->getLineCount();
+		$columnsCount = $this->criterion->getColumnCount();
+
+		foreach (range(0, $linesCount - 1) as $lineNumber) {
+			foreach (range(0, $columnsCount - 1) as $columnNumber) {
+				$coord = new Coordinate($lineNumber, $columnNumber);
+				if (!$this->grid->isCellSet($coord)) {
+					return $coord;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	private function getValuesFromLine($line) {
 		$grid = $this->grid;
 		$func = function($column) use ($line, $grid) {
