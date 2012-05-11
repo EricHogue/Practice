@@ -26,7 +26,7 @@ class Loader {
 		for ($columnNumber = 0; $columnNumber < count($cells); $columnNumber++) {
 			$value = $cells[$columnNumber];
 			if (is_numeric($value)) {
-				$grid->addCell(new Coordinate($lineNumber, $columnNumber), $value);
+				$grid->addCell(new Coordinate($lineNumber, $columnNumber), (int) $value);
 			}
 		}
 	}

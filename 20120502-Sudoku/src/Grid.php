@@ -19,6 +19,18 @@ class Grid {
 	}
 
 	public function isCellSet(Coordinate $coordinate) {
-		return array_key_exists($coordinate->getKey(), $this->cells);
+		$key = $coordinate->getKey();
+		return array_key_exists($key, $this->cells) && is_int($this->cells[$key]);
+	}
+
+	public function hasPossibleValues(Coordinate $coordinate) {
+		$key = $coordinate->getKey();
+		$cells = $this->cells;
+
+		return array_key_exists($key, $cells) && is_array($cells[$key]);
+	}
+
+	public function setPossibleValues(Coordinate $coordinate, array $values) {
+		$this->cells[$coordinate->getKey()] = $values;
 	}
 }

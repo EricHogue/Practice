@@ -47,6 +47,29 @@ class GridTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->grid->isCellSet($coordinate));
 	}
 
+	public function testPossibleValuesAreNotSet() {
+		$this->assertFalse($this->grid->hasPossibleValues(new Coordinate(0, 0)));
+	}
+
+	public function testPossibleValuesAreSet() {
+		$coordinate = new Coordinate(0, 0);
+		$this->grid->setPossibleValues($coordinate, array());
+		$this->assertTrue($this->grid->hasPossibleValues($coordinate));
+	}
+
+	public function testPossibleValuesNotSetWhenAValueIsSet() {
+		$coordinate = new Coordinate(3, 5);
+		$this->grid->addCell($coordinate, 3);
+		$this->assertFalse($this->grid->hasPossibleValues($coordinate));
+	}
+
+	public function testCellIsNotSetWhenPossibleValuesAreSet() {
+		$coordinate = new Coordinate(7, 2);
+		$this->grid->setPossibleValues($coordinate, array(3, 4));
+
+		$this->assertFalse($this->grid->isCellSet($coordinate));
+	}
+
 	/**
 	 * @expectedException CellNotSetException
 	 */
