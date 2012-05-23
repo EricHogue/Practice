@@ -58,6 +58,21 @@ class GridSplitter {
 		return null;
 	}
 
+	public function getLineValues($lineNumber) {
+		$values = array();
+
+		$columnCount = $this->criterion->getColumnCount();
+		foreach (range(0, $columnCount - 1) as $columnNumber) {
+			$coord = new Coordinate($lineNumber, $columnNumber);
+			if ($this->grid->isCellSet($coord)) {
+				$values[] = $this->grid->getValueAtCoordinate($coord);
+			}
+		}
+		sort($values);
+
+		return $values;
+	}
+
 	private function getValuesFromLine($line) {
 		$grid = $this->grid;
 		$func = function($column) use ($line, $grid) {
@@ -98,4 +113,5 @@ class GridSplitter {
 
 		return $subGrid;
 	}
+
 }

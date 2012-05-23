@@ -8,16 +8,18 @@ class GridSplitterTest extends PHPUnit_Framework_TestCase {
 	private $grid;
 
 	public function setup() {
+		$this->grid = $this->getMock('Grid');
+		$this->splitter = new GridSplitter($this->grid, new GridCriterion());
+	}
+
+	private function makeGetValueAtCoordinateReturnsTheCoordinate() {
 		$callback = function(Coordinate $coordinate) {
 			return $coordinate->getKey();
 		};
 
-		$this->grid = $this->getMock('Grid');
 		$this->grid->expects($this->any())
 			->method('getValueAtCoordinate')
 			->will($this->returnCallback($callback));
-
-		$this->splitter = new GridSplitter($this->grid, new GridCriterion());
 	}
 
 	public function testGetLinesReturns9Lines() {
@@ -25,6 +27,7 @@ class GridSplitterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testLine5ContainsAllTheCorrectValues() {
+		$this->makeGetValueAtCoordinateReturnsTheCoordinate();
 		$expected = array('5-0', '5-1', '5-2', '5-3', '5-4', '5-5', '5-6', '5-7', '5-8');
 		$lines = $this->splitter->getLines();
 		$this->assertSame($expected, $lines[5]);
@@ -35,6 +38,8 @@ class GridSplitterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testColumn8ContainsAllTheCorrectValues() {
+		$this->makeGetValueAtCoordinateReturnsTheCoordinate();
+
 		$expected = array('0-8', '1-8', '2-8', '3-8', '4-8', '5-8', '6-8', '7-8', '8-8');
 		$columns = $this->splitter->getColumns();
 		$this->assertSame($expected, $columns[8]);
@@ -45,12 +50,16 @@ class GridSplitterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testSubGrids4HasAllTheCorrectValues() {
+		$this->makeGetValueAtCoordinateReturnsTheCoordinate();
+
 		$expected = array('3-3', '3-4', '3-5', '4-3', '4-4', '4-5', '5-3', '5-4', '5-5');
 		$subGrids = $this->splitter->getSubGrids();
 		$this->assertSame($expected, $subGrids[4]);
 	}
 
 	public function testSubGrids8HasAllTheCorrectValues() {
+		$this->makeGetValueAtCoordinateReturnsTheCoordinate();
+
 		$expected = array('6-6', '6-7', '6-8', '7-6', '7-7', '7-8', '8-6', '8-7', '8-8');
 		$subGrids = $this->splitter->getSubGrids();
 		$this->assertSame($expected, $subGrids[8]);
@@ -73,6 +82,17 @@ class GridSplitterTest extends PHPUnit_Framework_TestCase {
 			->will($this->onConsecutiveCalls(true, true, true, true, true, true, true, true, true, true, true, true,
 				true, true, true, true, true, true, true, true, true, true, false));
 		$this->assertEquals(new Coordinate(2, 4), $this->splitter->nextEmptyCell());
+	}
+
+	public function testGetLineValues() {
+		$this->grid->expects($this->exactly(9))
+			->method('isCellSet')
+			->will($this->onConsecutiveCalls(true, false, true, false, false, false, true, true, false));
+
+		$this->grid->expects($this->exactly(4))
+			->method('getValueAtCoordinate')
+			->will($this->onConsecutiveCalls(5, 8, 9, 1));
+		$this->assertEquals(array(1, 5, 8, 9), $this->splitter->getLineValues(3));
 	}
 
 }
