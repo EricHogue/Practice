@@ -12,16 +12,6 @@ class GridSplitterTest extends PHPUnit_Framework_TestCase {
 		$this->splitter = new GridSplitter($this->grid, new GridCriterion());
 	}
 
-	private function makeGetValueAtCoordinateReturnsTheCoordinate() {
-		$callback = function(Coordinate $coordinate) {
-			return $coordinate->getKey();
-		};
-
-		$this->grid->expects($this->any())
-			->method('getValueAtCoordinate')
-			->will($this->returnCallback($callback));
-	}
-
 	public function testGetLinesReturns9Lines() {
 		$this->assertSame(9, count($this->splitter->getLines()));
 	}
@@ -95,4 +85,38 @@ class GridSplitterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array(1, 5, 8, 9), $this->splitter->getLineValues(3));
 	}
 
+	public function testGetColumnsValues() {
+		$this->grid->expects($this->exactly(9))
+			->method('isCellSet')
+			->will($this->onConsecutiveCalls(false, true, false, true, false, false, true, true, false));
+
+		$this->grid->expects($this->at(2))
+			->method('getValueAtCoordinate')
+			->with($this->equalTo(new Coordinate(1, 6)))
+			->will($this->returnValue(5));
+		$this->grid->expects($this->at(5))
+			->method('getValueAtCoordinate')
+			->with(new Coordinate(3, 6))
+			->will($this->returnValue(8));
+		$this->grid->expects($this->at(9))
+			->method('getValueAtCoordinate')
+			->with(new Coordinate(6, 6))
+			->will($this->returnValue(9));
+		$this->grid->expects($this->at(11))
+			->method('getValueAtCoordinate')
+			->with(new Coordinate(7, 6))
+			->will($this->returnValue(1));
+
+		$this->assertEquals(array(1, 5, 8, 9), $this->splitter->getColumnValues(6));
+	}
+
+	private function makeGetValueAtCoordinateReturnsTheCoordinate() {
+		$callback = function(Coordinate $coordinate) {
+			return $coordinate->getKey();
+		};
+
+		$this->grid->expects($this->any())
+			->method('getValueAtCoordinate')
+			->will($this->returnCallback($callback));
+	}
 }
