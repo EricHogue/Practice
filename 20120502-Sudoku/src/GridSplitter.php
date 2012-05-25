@@ -88,6 +88,22 @@ class GridSplitter {
 		return $values;
 	}
 
+	public function getSubGridValues($subGridNumber) {
+		$startingLine = $this->getStartingLineForSubGrid($subGridNumber);
+		$startingColumn = $this->getStartingColumnForSubGrids($subGridNumber, $startingLine);
+		$coordinates = $this->getSubGridCoordinates($startingLine, $startingColumn);
+		$values = array();
+
+		foreach($coordinates as $coord) {
+			if ($this->grid->isCellSet($coord)) {
+				$values[] = $this->grid->getValueAtCoordinate($coord);
+			}
+		}
+		sort($values);
+
+		return $values;
+	}
+
 	private function getValuesFromLine($line) {
 		$grid = $this->grid;
 		$func = function($column) use ($line, $grid) {
@@ -127,6 +143,20 @@ class GridSplitter {
 		}
 
 		return $subGrid;
+	}
+
+	private function getSubGridCoordinates($startingLine, $startingColumn) {
+		$linesToAdd = $this->criterion->getLinesBySubGrid() - 1;
+		$columnsToAdd = $this->criterion->getColumnsBySubGrid() - 1;
+		$coordinates = array();
+
+		foreach (range($startingLine, $startingLine + $linesToAdd) as $line) {
+			foreach (range($startingColumn, $startingColumn + $columnsToAdd) as $column) {
+				$coordinates[] = new Coordinate((int) $line, (int) $column);
+			}
+		}
+
+		return $coordinates;
 	}
 
 }
