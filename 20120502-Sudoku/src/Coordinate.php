@@ -15,4 +15,12 @@ class Coordinate {
 	public function getKey() {
 		return $this->row . '-'. $this->column;
 	}
+
+	public function getRow() {
+		return $this->row;
+	}
+
+	public function getColumn() {
+		return $this->column;
+	}
 }

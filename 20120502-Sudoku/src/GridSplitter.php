@@ -12,31 +12,29 @@ class GridSplitter {
 		$this->criterion = $criterion;
 	}
 
-	public function getLines() {
+	public function getLinesCoordinates() {
 		$lines = array();
 		foreach (range(0, $this->criterion->getLineCount() - 1) as $lineNumber) {
-			$lines[] = $this->getValuesFromLine($lineNumber);
+			$lines[] = $this->getCoordinatesForLine($lineNumber);
 		}
 
 		return $lines;
 	}
 
-	public function getColumns() {
+	public function getColumnsCoordinates() {
 		$columns = array();
 		foreach (range(0, $this->criterion->getColumnCount() - 1) as $columnNumber) {
-			$columns[] = $this->getValuesFromColumn($columnNumber);
+			$columns[] = $this->getCoordinatesForColumn($columnNumber);
 		}
 
 		return $columns;
 	}
 
-	public function getSubGrids() {
+	public function getSubGridsCoordinates() {
 		$subGrids = array();
 		foreach(range(0, $this->criterion->getSubGridCount() - 1) as $subGridNumber) {
-			$startingLine = $this->getStartingLineForSubGrid($subGridNumber);
-			$startingColumn = $this->getStartingColumnForSubGrids($subGridNumber, $startingLine);
 
-			$subGrids[] = $this->getSubGridFromPosition($startingLine, $startingColumn);
+			$subGrids[] = $this->getSubGridCoordinates($subGridNumber);
 		}
 
 		return $subGrids;
@@ -60,10 +58,10 @@ class GridSplitter {
 
 	public function getLineValues($lineNumber) {
 		$values = array();
+		$lines = $this->getLinesCoordinates();
+		$lineCoordinates = $lines[$lineNumber];
 
-		$columnCount = $this->criterion->getColumnCount();
-		foreach (range(0, $columnCount - 1) as $columnNumber) {
-			$coord = new Coordinate($lineNumber, $columnNumber);
+		foreach ($lineCoordinates as $coord) {
 			if ($this->grid->isCellSet($coord)) {
 				$values[] = $this->grid->getValueAtCoordinate($coord);
 			}
@@ -75,10 +73,10 @@ class GridSplitter {
 
 	public function getColumnValues($columnNumber) {
 		$values = array();
+		$columns = $this->getColumnsCoordinates();
+		$columnCoordinates = $columns[$columnNumber];
 
-		$lineCount = $this->criterion->getLineCount();
-		foreach (range(0, $lineCount - 1) as $lineNumber) {
-			$coord = new Coordinate($lineNumber, $columnNumber);
+		foreach ($columnCoordinates as $coord) {
 			if ($this->grid->isCellSet($coord)) {
 				$values[] = $this->grid->getValueAtCoordinate($coord);
 			}
@@ -89,9 +87,7 @@ class GridSplitter {
 	}
 
 	public function getSubGridValues($subGridNumber) {
-		$startingLine = $this->getStartingLineForSubGrid($subGridNumber);
-		$startingColumn = $this->getStartingColumnForSubGrids($subGridNumber, $startingLine);
-		$coordinates = $this->getSubGridCoordinates($startingLine, $startingColumn);
+		$coordinates = $this->getSubGridCoordinates($subGridNumber);
 		$values = array();
 
 		foreach($coordinates as $coord) {
@@ -104,19 +100,18 @@ class GridSplitter {
 		return $values;
 	}
 
-	private function getValuesFromLine($line) {
-		$grid = $this->grid;
-		$func = function($column) use ($line, $grid) {
-			return $grid->getValueAtCoordinate(new Coordinate($line, $column));
+	private function getCoordinatesForLine($line) {
+		$func = function($column) use ($line) {
+			return new Coordinate($line, $column);
 		};
 
 		return array_map($func, range(0, $this->criterion->getColumnCount() - 1));
 	}
 
-	private function getValuesFromColumn($column) {
+	private function getCoordinatesForColumn($column) {
 		$grid = $this->grid;
 		$func = function($line) use ($column, $grid) {
-			return $grid->getValueAtCoordinate(new Coordinate($line, $column));
+			return new Coordinate($line, $column);
 		};
 
 		return array_map($func, range(0, $this->criterion->getLineCount() - 1));
@@ -131,32 +126,26 @@ class GridSplitter {
 		return floor(($subGrid - $startingLine)) * $this->criterion->getColumnsBySubGrid();
 	}
 
-	private function getSubGridFromPosition($startingLine, $startingColumn) {
+	private function getSubGridCoordinates($subGridNumber) {
+		$coord = $this->getStartingCoordinateForSubGrid($subGridNumber);
+
 		$linesToAdd = $this->criterion->getLinesBySubGrid() - 1;
 		$columnsToAdd = $this->criterion->getColumnsBySubGrid() - 1;
 		$subGrid = array();
 
-		foreach (range($startingLine, $startingLine + $linesToAdd) as $line) {
-			foreach (range($startingColumn, $startingColumn + $columnsToAdd) as $column) {
-				$subGrid[] = $this->grid->getValueAtCoordinate(new Coordinate($line, $column));
+		foreach (range($coord->getRow(), $coord->getRow() + $linesToAdd) as $line) {
+			foreach (range($coord->getColumn(), $coord->getColumn() + $columnsToAdd) as $column) {
+				$subGrid[] = new Coordinate((int) $line, (int) $column);
 			}
 		}
 
 		return $subGrid;
 	}
 
-	private function getSubGridCoordinates($startingLine, $startingColumn) {
-		$linesToAdd = $this->criterion->getLinesBySubGrid() - 1;
-		$columnsToAdd = $this->criterion->getColumnsBySubGrid() - 1;
-		$coordinates = array();
+	protected function getStartingCoordinateForSubGrid($subGridNumber) {
+		$startingLine = $this->getStartingLineForSubGrid($subGridNumber);
+		$startingColumn = $this->getStartingColumnForSubGrids($subGridNumber, $startingLine);
 
-		foreach (range($startingLine, $startingLine + $linesToAdd) as $line) {
-			foreach (range($startingColumn, $startingColumn + $columnsToAdd) as $column) {
-				$coordinates[] = new Coordinate((int) $line, (int) $column);
-			}
-		}
-
-		return $coordinates;
+		return new Coordinate($startingLine, $startingColumn);
 	}
-
 }
